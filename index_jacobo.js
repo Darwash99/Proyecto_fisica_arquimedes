@@ -20,12 +20,39 @@ app.post('/data', (req,res)=>{
   res.json({ ok: true });
 });
 
-app.get('/latest', (req,res)=> res.json(last || {ok:false}));
+// Variables para simular los datos dinámicos
+let esp32_1 = {
+  Esp32_1: true,
+  distance: 43.8,
+  unit: "cm",
+  temperature: 22.5,
+  humidity: 64,
+  ts: 7527,
+  receivedAt: Date.now(),
+};
+
+let esp32_2 = {
+  Esp32_2: true,
+  flame: 1,
+  rpm: 0,
+  ts: 14646,
+  receivedAt: Date.now(),
+};
+
+app.get('/latest', (req,res)=> {
+  const merged = {
+    ok: true,
+    timestamp: Date.now(),
+    data: [esp32_2, esp32_1],
+  };
+  res.json(merged);
+});
 
 // ==== RUTA DASHBOARD ====
 app.get('/', (req,res)=>{
   res.render('dashboard', { sensor: last });
 });
+
 
 // Server
 app.listen(4000, ()=> console.log("Node en http://localhost:4000"));
